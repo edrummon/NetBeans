@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Acc9-1Class
+PROJECTNAME=Acc9Inheritance-StudentTypes
 
 # Active Configuration
 DEFAULTCONF=Debug
