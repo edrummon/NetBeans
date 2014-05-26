@@ -35,8 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/445265968/StudentPF.o \
-	${OBJECTDIR}/_ext/445265968/Student_info.o \
+	${OBJECTDIR}/_ext/445265968/Student.o \
 	${OBJECTDIR}/grade.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/median.o
@@ -66,15 +65,10 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/acc9-1class.exe: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/acc9-1class ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/_ext/445265968/StudentPF.o: /cygdrive/C/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/StudentPF.cpp 
+${OBJECTDIR}/_ext/445265968/Student.o: /cygdrive/C/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/445265968
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/445265968/StudentPF.o /cygdrive/C/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/StudentPF.cpp
-
-${OBJECTDIR}/_ext/445265968/Student_info.o: /cygdrive/C/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student_info.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/445265968
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/445265968/Student_info.o /cygdrive/C/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student_info.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/445265968/Student.o /cygdrive/C/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student.cpp
 
 ${OBJECTDIR}/grade.o: grade.cpp 
 	${MKDIR} -p ${OBJECTDIR}

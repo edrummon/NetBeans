@@ -4,8 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/StudentPF.h</itemPath>
-      <itemPath>C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student_info.h</itemPath>
+      <itemPath>C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student.h</itemPath>
       <itemPath>C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/grade.h</itemPath>
       <itemPath>median.h</itemPath>
     </logicalFolder>
@@ -16,8 +15,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/StudentPF.cpp</itemPath>
-      <itemPath>C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student_info.cpp</itemPath>
+      <itemPath>C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student.cpp</itemPath>
       <itemPath>grade.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
       <itemPath>median.cpp</itemPath>
@@ -47,22 +45,12 @@
           <commandLine>-std=c++11</commandLine>
         </ccTool>
       </compileType>
-      <item path="C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/StudentPF.cpp"
+      <item path="C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/StudentPF.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student_info.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student_info.h"
+      <item path="C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -101,22 +89,12 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/StudentPF.cpp"
+      <item path="C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/StudentPF.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student_info.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student_info.h"
+      <item path="C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9-1Class/Student.h"
             ex="false"
             tool="3"
             flavor2="0">

@@ -5,18 +5,14 @@
  * Created on May 24, 2014, 7:50 PM
  */
 
-#include <iomanip>
-#include <ios>
-//#include "Student_info.h"
-#include "StudentPF.h"
-#include "grade.h"
+#include "Student.h"
 
 using std::string;          using std::cout;
 using std::vector;          using std::endl;
 using std::cin;             using std::setprecision;
 
 int main(int argc, char** argv) {
-    //typedef Student_info StudentType;
+    //typedef StudentStd StudentType;
     typedef StudentPF StudentType;
     
     vector<StudentType> students;
@@ -27,20 +23,14 @@ int main(int argc, char** argv) {
         students.push_back(record);
         maxlen = std::max(maxlen, record.name().size());
     }
-    std::sort(students.begin(), students.end(), compare);
-    std::stable_partition(students.begin(), students.end(), pass);
-    
     cout << endl;
-    for (vector<StudentType>::size_type i = 0; i != students.size(); ++i) {
-        cout << students[i].name() << string(maxlen + 1 - students[i].name().size(), ' ');
-        if (pass(students[i]))
-            cout << "P" << endl;
-        else
-            cout << "F" << endl;
-//        double finalGrade = students[i].getFinalGrade();
-//        std::streamsize prec = cout.precision();
-//        cout << setprecision(3) << finalGrade
-//                << setprecision(prec) << endl;
+    
+    StudentType::arrange(students);
+    for (vector<StudentType>::iterator iter = students.begin(); 
+                                    iter != students.end(); ++iter) {
+        cout << iter->name() << string(maxlen + 1 - iter->name().size(), ' ');
+        iter->print();
+        cout << endl;
     }
     return 0;
 }
