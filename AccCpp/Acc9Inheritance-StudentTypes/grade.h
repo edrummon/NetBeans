@@ -8,9 +8,11 @@
 #ifndef GRADE_H
 #define	GRADE_H
 
+#include <string>
 #include "median.h"
 
 double grade(double, double, const std::vector<double>&);
 double grade(double, double, double);
+std::string calculateLetterGrade(double grade);
 
 #endif	/* GRADE_H */

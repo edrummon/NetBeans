@@ -8,7 +8,6 @@
 #ifndef STUDENT_H
 #define	STUDENT_H
 
-#include <string>
 #include <iostream>
 #include <iomanip>
 #include <ios>
@@ -18,10 +17,12 @@ class Student {
 public:
     Student();
     double getFinalGrade() const {return final_grade;}
+    std::string getLetterGrade() const {return letter_grade;}
     std::string name() const {return n;}
 protected:
     std::string n;
     double midterm, final, final_grade;
+    std::string letter_grade;
 };
 
 bool compare(const Student&, const Student&);

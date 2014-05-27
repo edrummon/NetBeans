@@ -17,6 +17,8 @@ istream& StudentStd::read(istream& in) {
     else
         final_grade = ::grade(midterm, final, 0);
     
+    letter_grade = ::calculateLetterGrade(final_grade);
+    
     return in;
 }
 
@@ -26,7 +28,7 @@ void StudentStd::arrange(vector<StudentStd>& students) {
 
 void StudentStd::print() {
     streamsize prec = cout.precision();
-    cout << setprecision(3) << final_grade << setprecision(prec);
+    cout << setprecision(3) << final_grade << setprecision(prec) << "\t" << letter_grade;
 }
 
 StudentPF::StudentPF(istream& is) {read(is);}
@@ -39,6 +41,7 @@ istream& StudentPF::read(istream& in) {
         while (in >> throwAway);
         in.clear();
     }
+    letter_grade = ::calculateLetterGrade(final_grade);
     return in;
 }
 
@@ -49,6 +52,7 @@ void StudentPF::arrange(vector<StudentPF>& students) {
 
 void StudentPF::print() {
     ::pass(*this) ? cout << "P" : cout << "F";
+    cout << "\t" << letter_grade;
 }
 
 bool compare(const Student& x, const Student& y) {
