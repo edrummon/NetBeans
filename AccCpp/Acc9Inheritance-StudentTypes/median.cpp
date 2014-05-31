@@ -1,13 +1,12 @@
 #include "median.h"
 
-using std::vector;      using std::sort;
-using std::domain_error;
+using std::sort;            using std::domain_error;
 
-double median(vector<double> vec) {
+double median(Vec<double> vec) {
     size_t size = vec.size();
     
     if (size == 0)
-        throw domain_error("Median of an empty vector");
+        throw domain_error("Median of an empty Vec");
     
     sort(vec.begin(), vec.end());
     

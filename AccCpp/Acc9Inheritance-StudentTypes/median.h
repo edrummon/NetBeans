@@ -8,10 +8,10 @@
 #ifndef MEDIAN_H
 #define	MEDIAN_H
 
-#include <vector>
 #include <stdexcept>
 #include <algorithm>
+#include "Vec.h"
 
-double median(std::vector<double>);
+double median(Vec<double>);
 
 #endif	/* MEDIAN_H */

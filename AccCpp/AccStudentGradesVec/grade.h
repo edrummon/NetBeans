@@ -19,7 +19,6 @@ double average(const std::vector<double>&);
 double average_grade(const Student_info&);
 double grade_aux(const Student_info&);
 double optimistic_median(const Student_info&);
-//double analysis(const std::vector<Student_info>&, double (const Student_info&));
 
 template<class T>
 double analysis(const std::vector<Student_info>& students, T gradingFunction) {

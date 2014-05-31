@@ -1,10 +1,10 @@
 #include "Student.h"
 
-using std::vector;          using std::string;
+using std::string;          using std::cout;
 using std::istream;         using std::streamsize;
-using std::setprecision;    using std::cout;
+using std::setprecision;
 
-Student::Student(): midterm(0), final(0), final_grade(0) {}
+Student::Student(): midterm(0), final(0), final_grade(0) {cout << "constructor Student" << std::endl;}
 
 StudentStd::StudentStd(istream& is) {read(is);}
 
@@ -22,7 +22,7 @@ istream& StudentStd::read(istream& in) {
     return in;
 }
 
-void StudentStd::arrange(vector<StudentStd>& students) {
+void StudentStd::arrange(Vec<StudentStd>& students) {
     std::sort(students.begin(), students.end(), compare);
 }
 
@@ -45,7 +45,7 @@ istream& StudentPF::read(istream& in) {
     return in;
 }
 
-void StudentPF::arrange(vector<StudentPF>& students) {
+void StudentPF::arrange(Vec<StudentPF>& students) {
     std::sort(students.begin(), students.end(), compare);
     std::stable_partition(students.begin(), students.end(), pass);
 }
@@ -63,7 +63,7 @@ bool pass(const Student& s) {
     return s.getFinalGrade() > 60;
 }
 
-istream& read_hw(istream& in, vector<double>& hw) {
+istream& read_hw(istream& in, Vec<double>& hw) {
     if (in) {
         hw.clear();
         double x;

@@ -13,6 +13,26 @@
 #include <vector>
 
 struct Student_info {
+    Student_info() {std::cout << "constructor" << std::endl;}
+    ~Student_info() {std::cout << "destructor " << name << std::endl;}
+    Student_info(const Student_info& s) {
+        std::cout << "copy constructor " << s.name << std::endl;
+        name = s.name;
+        midterm = s.midterm;
+        final = s.final;
+        homework = s.homework;
+    }
+    Student_info& operator=(const Student_info& rhs) {
+        std::cout << "assignment operation" << std::endl;
+        if (&rhs != this) {
+            name = rhs.name;
+            midterm = rhs.midterm;
+            final = rhs.final;
+            homework = rhs.homework;
+        }
+        return *this;
+    }
+    
     std::string name;
     double midterm, final;
     std::vector<double> homework;

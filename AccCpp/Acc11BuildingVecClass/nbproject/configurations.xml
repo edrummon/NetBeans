@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>SimpleList.h</itemPath>
       <itemPath>C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc11BuildingVecClass/Vec.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -36,11 +37,16 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <ccTool>
+          <commandLine>-std=c++11</commandLine>
+        </ccTool>
       </compileType>
       <item path="C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc11BuildingVecClass/Vec.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="SimpleList.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -69,6 +75,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="SimpleList.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>

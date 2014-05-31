@@ -5,6 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9Inheritance-StudentTypes/Student.h</itemPath>
+      <itemPath>Vec.h</itemPath>
       <itemPath>C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9Inheritance-StudentTypes/grade.h</itemPath>
       <itemPath>C:/Users/Instinct212/Documents/NetBeansProjects/AccCpp/Acc9Inheritance-StudentTypes/median.h</itemPath>
     </logicalFolder>
@@ -72,6 +73,8 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="Vec.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
@@ -124,6 +127,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="Vec.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>

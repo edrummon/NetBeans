@@ -7,8 +7,6 @@
 
 #include <vector>
 //#include <list>
-//#include <iomanip>
-//#include <ios>
 #include "grade.h"
 #include "Student_info.h"
 
@@ -16,12 +14,6 @@ using std::cin;             using std::string;
 using std::cout;            using std::vector;
 using std::endl;            using std::find;
 using std::partition;
-//using std::domain_error;    
-//using std::max;             
-//using std::list;
-//using std::setprecision;
-//using std::streamsize;
-//using std::sort;
 
 //typedef vector<Student_info> containerType;
 //typedef list<Student_info> containerType;
@@ -50,22 +42,15 @@ vector<Student_info> extractDidntDoAllHw(vector<Student_info>& students) {
 }
 
 int main(int argc, char** argv) {
-    /*
-    containerType students;
-    Student_info record;
-    size_t maxlen = 0;
-    
-    while (read(cin, record)) {
-        maxlen = max(maxlen, record.name.size());
-        students.push_back(record);
-    }
-    */
+
     Student_info student;
     vector<Student_info> did, didnt;
     
     while (read(cin, student)) {
         did.push_back(student);
     }
+    
+    cout << "Extraction:" << endl;
     didnt = extractDidntDoAllHw(did);
     
     if (did.empty()) {
@@ -76,22 +61,8 @@ int main(int argc, char** argv) {
         cout << "Every student did all the homework!" << endl;
         return 1;
     }
-    /*
-    sort(students.begin(), students.end(), compare);
     
-    for (containerType::const_iterator i = students.begin(); i != students.end(); i++) {
-        cout << i->name << string(maxlen + 1 - students[i].name.size(), ' ');
-        
-        try {
-            double final_grade = grade(students[i]);
-            streamsize prec = cout.precision();
-            cout << setprecision(3) << final_grade << setprecision(prec);
-        } catch (domain_error e) {
-            cout << e.what();
-        }
-        cout << endl;
-    }
-    */
+    cout << "Analysis:" << endl;
     write_analysis(cout, "median", grade_aux, did, didnt);
     write_analysis(cout, "average", average_grade, did, didnt);
     write_analysis(cout, "median of homework turned in", 

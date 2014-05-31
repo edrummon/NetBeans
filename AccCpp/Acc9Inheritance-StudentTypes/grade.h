@@ -11,7 +11,7 @@
 #include <string>
 #include "median.h"
 
-double grade(double, double, const std::vector<double>&);
+double grade(double, double, const Vec<double>&);
 double grade(double, double, double);
 std::string calculateLetterGrade(double grade);
 
