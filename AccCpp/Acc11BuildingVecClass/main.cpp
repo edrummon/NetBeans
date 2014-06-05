@@ -5,7 +5,7 @@
  * Created on May 28, 2014, 11:22 PM
  */
 
-//#include <iostream>
+#include <iostream>
 #include "Vec.h"
 #include "SimpleList.h"
 
@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     
     Vec<int> v;
     
-    //testing the very basics
+    //testing basics
     cout << "Vec:" << endl;
     for (int i = 0; i < 20; ++i)
         v.push_back(i);
@@ -28,15 +28,9 @@ int main(int argc, char** argv) {
     
     for (int i = 0; i < 20; ++i)
         l.push_back(i);
-
-    SimpleList<int>::iterator iter = l.begin();
     
-    for (; iter->next != NULL; ++iter)
-        cout << iter->getData() << " ";
-    cout << iter->getData();
-    /*
-    cout << iter->getData() << " " << iter->next->getData() << " " << 
-            iter->next->next->getData() << " " << iter->next->next->next->getData();
-    */
+    for (list_const_iterator<int> b = l.begin(); b != l.end(); ++b)
+        cout << *b << " ";
+
     return 0;
 }

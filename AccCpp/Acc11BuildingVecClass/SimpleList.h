@@ -8,34 +8,62 @@
 #ifndef SIMPLELIST_H
 #define	SIMPLELIST_H
 
-#include <iostream>
+template<class T>
+struct Node {
+
+    Node() : next(NULL) { }
+    Node(const T& newData) : data(newData), next(NULL) {}
+    Node(const Node&);
+    ~Node();
+    
+    Node& operator=(const Node&);
+
+    T& getData() { return data; }
+
+    const T& getData() const { return data; }
+
+    bool operator!=(const Node& rhs) const {
+        return data != rhs.data;
+    }
+
+    const T data;
+    Node* next;
+};
+
+template<class T>
+struct list_iterator {
+    list_iterator(): itNode() {}
+    list_iterator(Node<T>* n): itNode(n) {}
+    
+    list_iterator& operator++() {
+        itNode = itNode->next;
+        return *this;
+    }
+    T operator*() { return itNode->data; }
+    bool operator!=(const list_iterator& rhs) { return itNode != rhs.itNode; }
+private:
+    Node<T>* itNode;
+};
+
+template<class T>
+struct list_const_iterator {
+    list_const_iterator(): itNode() {}
+    list_const_iterator(Node<T>* n): itNode(n) {}
+    
+    list_const_iterator& operator++() {
+        itNode = itNode->next;
+        return *this;
+    }
+    const T operator*() const { return itNode->data; }
+    bool operator !=(const list_const_iterator& rhs) const { return itNode != rhs.itNode; }
+private:
+    const Node<T>* itNode;
+};
 
 template<class T>
 class SimpleList {
 public:
     
-    struct Node {
-        Node(): next(NULL) {}
-        Node(const T& newData): data(newData), next(NULL) {}
-        Node(const Node&);
-        ~Node();
-        Node& operator=(const Node&);
-        
-        T& getData() { return data; }
-        const T& getData() const { return data; }
-        
-        Node& operator++() { std::cout << "in ++ "; this = this->next; return *this; }
-        const Node& operator++() const { std::cout << "in ++ "; this = this->next; return *this; }
-        
-        T operator*() { return data; }
-        const T operator*() const { return data; }
-        
-        T data;
-        Node* next;
-    };
-    
-    typedef typename SimpleList::Node* iterator;
-    typedef const typename SimpleList::Node* const_iterator;
     typedef size_t size_type;
     typedef T value_type;
     
@@ -45,15 +73,28 @@ public:
     SimpleList& operator=(const SimpleList&);
     
     void push_back(const T&);
-    void insert(iterator, const T&);
+    void insert(list_iterator<T>, const T&);
     //iterator erase(iterator);
     
     bool empty() const { return head == NULL; }
     
-    iterator begin() { return head; }
-    const_iterator begin() const { return head; }
+    //list_iterator<T> begin() { return list_iterator<T>(head); }
+    list_const_iterator<T> begin() const { return list_const_iterator<T>(head); }
+    
+//    list_iterator<T> end() {
+//        Node<T>* findEnd = head;
+//        while (findEnd != NULL)
+//            findEnd = findEnd->next;
+//        return list_iterator<T>(findEnd);
+//    }
+    list_const_iterator<T> end() const {
+        Node<T>* findEnd = head;
+        while (findEnd != NULL)
+            findEnd = findEnd->next;
+        return list_const_iterator<T>(findEnd);
+    }
 private:
-    Node* head;
+    Node<T>* head;
 };
 
 template<class T>
@@ -63,7 +104,7 @@ SimpleList<T>::SimpleList() {
 
 template<class T>
 SimpleList<T>::SimpleList(const SimpleList& s) {
-    head = new Node;
+    head = new Node<T>;
     *head = *(s.head);
 }
 
@@ -76,7 +117,7 @@ template<class T>
 SimpleList<T>& SimpleList<T>::operator=(const SimpleList& rhs) {
     if (&rhs != this) {
         delete head;
-        head = new Node;
+        head = new Node<T>;
         *head = rhs->head;
     }
     return *this;
@@ -84,11 +125,11 @@ SimpleList<T>& SimpleList<T>::operator=(const SimpleList& rhs) {
 
 template<class T>
 void SimpleList<T>::push_back(const T& val) {
-    Node* newNode = new Node(val);
+    Node<T>* newNode = new Node<T>(val);
     if (head == NULL) {
         head = newNode;
     } else {
-        Node* findEnd = head;
+        Node<T>* findEnd = head;
         while (findEnd->next != NULL)
             findEnd = findEnd->next;
         findEnd->next = newNode;
@@ -96,27 +137,27 @@ void SimpleList<T>::push_back(const T& val) {
 }
 
 template<class T>
-void SimpleList<T>::insert(iterator it, const T& val) {
-    Node* newNext = it->next;
-    Node* newNode = new Node(val);
-    it->next = newNode;
-    newNode->next = newNext;
+void SimpleList<T>::insert(list_iterator<T> it, const T& val) {
+//    Node* newNext = it->next;
+//    Node* newNode = new Node(val);
+//    it->next = newNode;
+//    newNode->next = newNext;
 }
 
 template<class T>
-SimpleList<T>::Node::Node(const Node& n) {
+Node<T>::Node(const Node& n) {
     next = new Node;
     *next = *(n.next);
     data = n.data;
 }
 
 template<class T>
-SimpleList<T>::Node::~Node() {
+Node<T>::~Node() {
     delete next;
 }
 
 template<class T>
-typename SimpleList<T>::Node& SimpleList<T>::Node::operator=(const Node& rhs) {
+Node<T>& Node<T>::operator=(const Node& rhs) {
     if (&rhs != this) {
         delete next;
         Node* next = new Node;
