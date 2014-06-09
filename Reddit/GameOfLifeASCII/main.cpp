@@ -12,7 +12,7 @@ using std::cout;            using std::endl;
 using std::cin;             using std::string;
 
 void wait(int seconds) {
-    int endwait = clock() + seconds * CLOCKS_PER_SEC * .5;
+    int endwait = clock() + seconds * CLOCKS_PER_SEC * .15;
     while (clock() < endwait) {}
 }
 
