@@ -11,25 +11,23 @@ using std::cout;            using std::endl;
 using std::cin;
 
 int main(int argc, char** argv) {
-    
-    Str s = "Hello, world";
-    cout << s << endl;
-    //s += ". I am a Str.";
-    s = s + " more words!"; //fails program unless i have cout << endl; in the non-default constructor o_O
-    cout << s << endl;
 
-    std::string z = " blobby blob";
-    s += Str(z.begin()+7, z.begin()+12);
-    cout << s << endl;
+    Str s = "Here is s";
+    Str b("this is b");
     
-    Str b("relational op tests");
-    cout << (s > b) << " " << (s >= b) << " " << (b < s) << " " << (b <= s) << endl;
+    cout << s << endl << b.c_str() << endl;
     
-    cout << b << endl;
     cin >> b;
-    cout << b << endl;
+    cout << b.c_str() << endl;
     
-    cout << (b == s) << " " << (b != s) << endl;
+    for (Str::const_iterator it = s.begin(); it != s.end(); ++it)
+        cout << *it;
+    cout << endl;
+    
+    cin.get();
+    Str line;
+    Str::getline(cin, line);
+    cout << line;
 
     return 0;
 }

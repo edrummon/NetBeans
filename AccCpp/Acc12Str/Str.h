@@ -8,13 +8,17 @@
 #ifndef STR_H
 #define	STR_H
 
+#include <algorithm>
 #include <cstring>
 #include <iostream>
+#include <iterator>
 
 class Str {
     friend std::istream& operator>> (std::istream&, Str&);
 public:
     typedef size_t size_type;
+    typedef char* iterator;
+    typedef const char* const_iterator;
     
     Str(): length(0), limit(0), data(nullptr) {}
     Str(size_type, char);
@@ -38,6 +42,15 @@ public:
     
     Str& operator+(const char*);
     
+    static std::istream& getline(std::istream&, Str&);
+    
+    bool isEmpty() const { return length == 0; }
+    iterator begin() { return data; }
+    const_iterator begin() const { return data; }
+    
+    iterator end() { return data + length; }
+    const_iterator end() const { return data + length; }
+    
     static int strcmp(const Str&, const Str&);
     
     char& operator[](size_type i) { return data[i]; }
@@ -49,6 +62,7 @@ public:
     const char* dataFunc() const { return data; }
     
     void push_back(char);
+    void insert(const_iterator, const_iterator);
     
 private:
     char* data;
