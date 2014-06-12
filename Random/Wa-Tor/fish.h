@@ -10,13 +10,18 @@
 
 class Fish {
 public:
-    Fish(): age(0), breedingAge(1) {}
-    Fish(int a, int breedAge): age(a), breedingAge(breedAge) {}
+    Fish(): age(0) {}
+    Fish(int a): age(a) {}
     
-    breed();
-    move();
+    static void setBreedingAge(int b) { int breedingAge = b; }
+    char getPic() const { return pic; }
+    
+    void breed();
+    void move();
 private:
-    int age, breedingAge;
+    int age;
+    static const int breedingAge;
+    char pic = 'F';
 };
 
 #endif	/* FISH_H */

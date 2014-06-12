@@ -10,15 +10,22 @@
 
 class Shark {
 public:
-    Shark(): age(0), breedingAge(1), starvationTimer(2) {}
-    Shark(int a, int breedAge, int starve): age(a), breedingAge(breedAge), starvationTimer(starve) {}
+    Shark(): age(0) {}
+    Shark(int a): age(a) {}
     
-    breed();
-    hunt();
-    move();
-    eatFish() { starvationTimer = 0; }
+    static void setBreedingAge(int b) { int breedingAge = b; }
+    static void setStarvationTimer(int s) { int starvationTimer = s; }
+    
+    char getPic() const { return pic; }
+    
+    void breed();
+    void hunt();
+    void move();
+    //eatFish() { starvationTimer = 0; }
 private:
-    int age, breedingAge, starvationTimer;
+    int age;
+    static const int breedingAge, starvationTimer;
+    char pic = 'S';
 };
 
 #endif	/* SHARK_H */

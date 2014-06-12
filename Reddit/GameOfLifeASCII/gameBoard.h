@@ -11,7 +11,7 @@
 #include <iostream>
 
 struct cell {
-    cell() { activeNeighbors = 0; currentStatus = nextStatus = '.'; }
+    cell(): activeNeighbors(0), currentStatus('.'), nextStatus('.') {}
     void setNextStatus();
     void updateStatus() { currentStatus = nextStatus; }
     

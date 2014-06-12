@@ -1,8 +1,6 @@
 #include <iostream>
-#include <array>
 #include <map>
 #include <random>
-#include <iomanip>
 
 int main(){
     //trying out random engines, testing dice roll distributions to make sure they're working
