@@ -13,6 +13,6 @@
 
 double grade(double, double, const Vec<double>&);
 double grade(double, double, double);
-std::string calculateLetterGrade(double grade);
+std::string calculateLetterGrade(double);
 
 #endif	/* GRADE_H */

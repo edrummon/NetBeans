@@ -42,7 +42,7 @@
       </toolsSet>
       <compileType>
         <ccTool>
-          <commandLine>-std=c++11</commandLine>
+          <standard>8</standard>
         </ccTool>
       </compileType>
       <item path="fish.cpp" ex="false" tool="1" flavor2="0">

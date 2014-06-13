@@ -13,9 +13,11 @@ using std::cin;
 int main(int argc, char** argv) {
     
     planet x(5, 5, 5, 5, 5, 5, 5);
+    
     x.displaySea();
-    cout << "here";
-    //x.updatePlanet();
+    x.updatePlanet();
+    cout << endl;
+    x.displaySea();
 
     return 0;
 }
