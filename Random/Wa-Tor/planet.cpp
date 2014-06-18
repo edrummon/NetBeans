@@ -3,9 +3,10 @@
 using std::vector;                      using std::shared_ptr;
 using std::uniform_int_distribution;    using std::cout;
 using std::endl;                        using std::mt19937;
+using std::pair;                        using std::make_pair;
 
 void tile::display() const {
-    if (!isOccupied())
+    if (isEmpty())
         cout << '-';
     else if (pFish == nullptr)
         cout << pShark->getPic();
@@ -77,14 +78,14 @@ void planet::placement(mt19937& pRNG) {
     int randHeight = randYcoord(pRNG);
     int randWidth = randXcoord(pRNG);
     for (int i = 0; i < activeFish.size(); ++i) {
-        while (sea[randHeight][randWidth].isOccupied()) {
+        while (!sea[randHeight][randWidth].isEmpty()) {
             randHeight = randYcoord(pRNG);
             randWidth = randXcoord(pRNG);
         }
         sea[randHeight][randWidth].pFish = activeFish[i];
     }
     for (int i = 0; i < activeSharks.size(); ++i) {
-        while (sea[randHeight][randWidth].isOccupied()) {
+        while (!sea[randHeight][randWidth].isEmpty()) {
             randHeight = randYcoord(pRNG);
             randWidth = randXcoord(pRNG);
         }
@@ -102,25 +103,28 @@ shared_ptr<Shark> sharkReset(shared_ptr<Shark> s) {
     return s;
 }
 
-void planet::updatePlanet() {
+void planet::updatePlanet() { //in order to count fish/sharks later, might have to remove the old creature sea[y][x] pointed to from its vector instead of just setting it to nullptr
     int y = 0, x = 0;
     for (auto &vector : sea) {
         
         for (auto &tile : vector) {
-            
+
             if (tile.hasFish() && !tile.pFish.get()->hasMoved()) {
 
-                if (tile.pFish.get()->timeToReproduce()) {
+                int newY = y, newX = x;
+                findNeighborTile(newY, newX, &tile::isEmpty);
+                sea[newY][newX].pFish = sea[y][x].pFish;
+                sea[newY][newX].pFish.get()->move();
+
+                if (tile.pFish.get()->timeToReproduce()) { //tile's pFish still points to the fish that has now "moved"
                     
-                    //normal move stuff (maybe take some code from the ELSE and move it above this IF)
-                    //but then make new fish in oldY oldX spot and both ages = 0
+                    sea[newY][newX].pFish.get()->reproduce();
+                    shared_ptr<Fish> f(new Fish());
+                    activeFish.push_back(f);
+                    sea[y][x].pFish = activeFish[activeFish.size()-1];
                     
                 } else {
 
-                    int newY = y, newX = x;
-                    findNeighborTile(newY, newX, &tile::isOccupied);
-                    sea[newY][newX].pFish = sea[y][x].pFish;
-                    sea[newY][newX].pFish.get()->move();
                     sea[newY][newX].pFish.get()->grow();
                     sea[y][x].pFish = nullptr;
 
@@ -130,23 +134,44 @@ void planet::updatePlanet() {
                 
                 int newY = y, newX = x;
                 findNeighborTile(newY, newX, &tile::hasFish);
-                if (newY != y || newX != x) { //this shark has found a fish to eat
-                    
-                    sea[newY][newX].pFish = nullptr;
-                    sea[newY][newX].pShark = sea[y][x].pShark;
-                    sea[newY][newX].pShark.get()->eatFish();
-                    
-                } else { //no fish found, shark will move to a random neighbor tile, just like fish do
-                    
-                    findNeighborTile(newY, newX, &tile::isOccupied);
-                    sea[newY][newX].pShark = sea[y][x].pShark;
-                    sea[newY][newX].pShark.get()->noFood();
-                    
-                }
                 
-                sea[y][x].pShark = nullptr;
-                sea[newY][newX].pShark.get()->move();
-                sea[newY][newX].pShark.get()->grow();
+                if (tile.pShark.get()->hasStarved()) {
+                    
+                    sea[y][x].pShark = nullptr; //and remove from vector for counting later
+                    
+                } else {
+
+                    if (newY != y || newX != x) { //this shark has found a fish to eat
+
+                        sea[newY][newX].pFish = nullptr; //remove fish from vector also? or maybe I should be using unique_ptr
+                        sea[newY][newX].pShark = sea[y][x].pShark;
+                        sea[newY][newX].pShark.get()->eatFish();
+
+                    } else { //no fish found, shark will move to a random neighbor tile, just like fish do
+
+                        findNeighborTile(newY, newX, &tile::isEmpty);
+                        sea[newY][newX].pShark = sea[y][x].pShark;
+                        sea[newY][newX].pShark.get()->noFoodFound();
+
+                    }
+                    
+                    sea[newY][newX].pShark.get()->move();
+                    
+                    if (tile.pShark.get()->timeToReproduce()) {
+                        
+                        sea[newY][newX].pShark.get()->reproduce();
+                        shared_ptr<Shark> s(new Shark());
+                        activeSharks.push_back(s);
+                        sea[y][x].pShark = activeSharks[activeSharks.size()-1];
+                        
+                    } else {
+
+                        sea[newY][newX].pShark.get()->grow();
+                        sea[y][x].pShark = nullptr;
+                    
+                    }
+
+                }
                 
             }
             x = (x+planetWidth+1)%planetWidth;
@@ -166,28 +191,35 @@ void planet::findNeighborTile(int& y, int& x, bool (tile::*func)() const) {
     int xLeft = (xMod-1)%planetWidth;
     int xRight = (xMod+1)%planetWidth;
     
-    if (!(sea[yAbove][x].*func)()) {
-        y = yAbove;
-    } else if (!(sea[yAbove][xRight].*func)()) {
-        y = yAbove;
-        x = xRight;
-    } else if (!(sea[y][xRight].*func)()) {
-        x = xRight;
-    } else if (!(sea[yBelow][xRight].*func)()) {
-        y = yBelow;
-        x = xRight;
-    } else if (!(sea[yBelow][x].*func)()) {
-        y = yBelow;
-    } else if (!(sea[yBelow][xLeft].*func)()) {
-        y = yBelow;
-        x = xLeft;
-    } else if (!(sea[y][xLeft].*func)()) {
-        x = xLeft;
-    } else if (!(sea[yAbove][xLeft].*func)()) {
-        y = yAbove;
-        x = xLeft;
-    } else if (!(sea[yAbove][x].*func)()) {
-        y = yAbove;
+    vector<pair<int, int> > neighborCoords;
+    
+    neighborCoords.push_back(make_pair(yAbove, x));
+    neighborCoords.push_back(make_pair(yAbove, xRight));
+    neighborCoords.push_back(make_pair(y, xRight));
+    neighborCoords.push_back(make_pair(yBelow, xRight));
+    neighborCoords.push_back(make_pair(yBelow, x));
+    neighborCoords.push_back(make_pair(yBelow, xLeft));
+    neighborCoords.push_back(make_pair(y, xLeft));
+    neighborCoords.push_back(make_pair(yAbove, xLeft));
+    
+    int uncheckedNeighbors = neighborCoords.size();
+    int randVectorIndex = rand() % (uncheckedNeighbors--);
+    
+    int neighborCoordY = neighborCoords[randVectorIndex].first;
+    int neighborCoordX = neighborCoords[randVectorIndex].second;
+    
+    while (!(sea[neighborCoordY][neighborCoordX].*func)() && uncheckedNeighbors > 0) {
+        
+        neighborCoords.erase(neighborCoords.begin() + randVectorIndex);
+        randVectorIndex = rand() % (uncheckedNeighbors--);
+        
+        neighborCoordY = neighborCoords[randVectorIndex].first;
+        neighborCoordX = neighborCoords[randVectorIndex].second;
+        
+    }
+    if (uncheckedNeighbors != 0) { //an appropriate new tile was found, we didn't just run out of possibilities
+        y = neighborCoordY;
+        x = neighborCoordX;
     }
 }
 

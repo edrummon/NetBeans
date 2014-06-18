@@ -13,24 +13,25 @@ public:
     Shark(): age(0), timeSinceFood(0), moved(false) {}
     Shark(int a): age(a), timeSinceFood(0), moved(false) {}
     
-    static void setBreedingAge(int b) { int breedingAge = b; }
-    static void setStarvationTimer(int s) { int starvationTimer = s; }
+    static void setBreedingAge(int b) { breedingAge = b; }
+    static void setStarvationTimer(int s) { starvationTimer = s; }
     
     char getPic() const { return pic; }
     
     void grow() { ++age; }
     void reproduce() { age = 0; }
     void eatFish() { timeSinceFood = 0; }
-    void noFood() { ++timeSinceFood; }
+    void noFoodFound() { ++timeSinceFood; }
     
     void move() { moved = true; }
     void reset() { moved = false; }
     
     bool hasMoved() const { return moved; }
     bool timeToReproduce() const { return age == breedingAge; }
+    bool hasStarved() { return timeSinceFood == starvationTimer; }
 private:
     int age, timeSinceFood;
-    static const int breedingAge, starvationTimer;
+    static int breedingAge, starvationTimer;
     char pic = 'S';
     bool moved;
 };

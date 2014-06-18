@@ -12,6 +12,7 @@
 #include <iostream>
 #include <memory>
 #include <random>
+#include <utility>
 #include <vector>
 #include "fish.h"
 #include "shark.h"
@@ -19,7 +20,7 @@
 struct tile {
     tile(): pFish(nullptr), pShark(nullptr) {}
     
-    bool isOccupied() const { return pFish != nullptr || pShark != nullptr; }
+    bool isEmpty() const { return pFish == nullptr && pShark == nullptr; }
     bool hasFish() const { return pFish != nullptr; }
     bool hasShark() const { return pShark != nullptr; }
     
