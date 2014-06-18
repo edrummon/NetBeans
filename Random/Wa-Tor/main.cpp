@@ -21,10 +21,9 @@ int main(int argc, char** argv) {
     int width, height, numFish, numSharks, fishBreedingAge,
             sharkBreedingAge, sharkStarvationTimer, numIterations;
     
+    cout << "Simulation parameters: ";
     cin >> width >> height >> numFish >> numSharks >> fishBreedingAge
-            >> sharkBreedingAge >> sharkStarvationTimer;
-    
-    cin >> numIterations;
+            >> sharkBreedingAge >> sharkStarvationTimer >> numIterations;
     cout << endl;
     
     planet Wa_Tor(width, height, numFish, numSharks, fishBreedingAge,
