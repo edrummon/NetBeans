@@ -116,7 +116,7 @@ void planet::updatePlanet() { //in order to count fish/sharks later, might have 
                 findNeighborTile(newY, newX, &tile::isEmpty);
                 sea[y][x].pFish.get()->move();
                 
-                if (newY == y && newX == x) {
+                if (newY == y && newX == x) { //fish is surrounded, if would otherwise reproduce then just set its age to 0
                     
                     if (tile.pFish.get()->timeToReproduce()) {
                         
@@ -130,18 +130,18 @@ void planet::updatePlanet() { //in order to count fish/sharks later, might have 
                     
                 } else {
                     
+                    sea[newY][newX].pFish = sea[y][x].pFish;
+                    
                     if (tile.pFish.get()->timeToReproduce()) {
                         
-                        sea[y][x].pFish.get()->reproduce();
-                        sea[newY][newX].pFish = sea[y][x].pFish;
+                        sea[newY][newX].pFish.get()->reproduce();
                         shared_ptr<Fish> f(new Fish());
                         activeFish.push_back(f);
                         sea[y][x].pFish = activeFish[activeFish.size()-1];
                         
                     } else {
                         
-                        sea[y][x].pFish.get()->grow();
-                        sea[newY][newX].pFish = sea[y][x].pFish;
+                        sea[newY][newX].pFish.get()->grow();
                         sea[y][x].pFish = nullptr;
                         
                     }
@@ -162,21 +162,20 @@ void planet::updatePlanet() { //in order to count fish/sharks later, might have 
 
                     if (newY != y || newX != x) { //this shark has found a fish to eat
 
-                        sea[newY][newX].pFish = nullptr; //remove fish from vector also? or maybe I should be using unique_ptr
                         sea[y][x].pShark.get()->eatFish();
-
+                        sea[newY][newX].pFish = nullptr; //remove fish from vector also? or maybe I should be using unique_ptr
+                        sea[newY][newX].pShark = sea[y][x].pShark;
+                        
                         if (tile.pShark.get()->timeToReproduce()) {
 
-                            sea[y][x].pShark.get()->reproduce();
-                            sea[newY][newX].pShark = sea[y][x].pShark;
+                            sea[newY][newX].pShark.get()->reproduce();
                             shared_ptr<Shark> s(new Shark());
                             activeSharks.push_back(s);
                             sea[y][x].pShark = activeSharks[activeSharks.size()-1];
 
                         } else {
 
-                            sea[y][x].pShark.get()->grow();
-                            sea[newY][newX].pShark = sea[y][x].pShark;
+                            sea[newY][newX].pShark.get()->grow();
                             sea[y][x].pShark = nullptr;
 
                         }
@@ -186,7 +185,7 @@ void planet::updatePlanet() { //in order to count fish/sharks later, might have 
                         sea[y][x].pShark.get()->noFoodFound();
                         findNeighborTile(newY, newX, &tile::isEmpty);
 
-                        if (newY == y && newX == x) {
+                        if (newY == y && newX == x) { //shark is surrounded (by sharks), if otherwise would reproduce then just set its age to 0
 
                             if (tile.pShark.get()->timeToReproduce()) {
 
@@ -228,7 +227,7 @@ void planet::findNeighborTile(int& y, int& x, bool (tile::*func)() const) {
     int xLeft = (xMod-1)%planetWidth;
     int xRight = (xMod+1)%planetWidth;
     
-    vector<pair<int, int> > neighborCoords;
+    vector<pair<int, int> > neighborCoords; //stores coordinates of all 8 neighbor tiles
     
     neighborCoords.push_back(make_pair(yAbove, x));
     neighborCoords.push_back(make_pair(yAbove, xRight));
@@ -245,7 +244,7 @@ void planet::findNeighborTile(int& y, int& x, bool (tile::*func)() const) {
     int neighborCoordY = neighborCoords[randVectorIndex].first;
     int neighborCoordX = neighborCoords[randVectorIndex].second;
     
-    while (!(sea[neighborCoordY][neighborCoordX].*func)() && uncheckedNeighbors > 0) {
+    while (!(sea[neighborCoordY][neighborCoordX].*func)() && uncheckedNeighbors > 0) { //if function isn't true for this tile, remove it and try another random neighbor
         
         neighborCoords.erase(neighborCoords.begin() + randVectorIndex);
         randVectorIndex = rand() % (uncheckedNeighbors--);

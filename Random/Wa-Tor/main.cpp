@@ -32,10 +32,12 @@ int main(int argc, char** argv) {
     Wa_Tor.displaySea();
 
     for (int iteration = 0; iteration != numIterations; ++iteration) {
+        
         Wa_Tor.updatePlanet();
         wait(1);
         cout << endl;
         Wa_Tor.displaySea();
+        
     }
 
     return 0;
