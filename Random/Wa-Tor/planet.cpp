@@ -204,10 +204,10 @@ void planet::updatePlanet() { //in order to count fish/sharks later, might have 
         }
         y = (y+planetHeight+1)%planetHeight;
     }
-    std::transform(activeFish.begin(), activeFish.end(), activeFish.begin(),
-            [&] (shared_ptr<Fish> f) { f.get()->reset(); return f; });
-    std::transform(activeSharks.begin(), activeSharks.end(), activeSharks.begin(),
-            [&] (shared_ptr<Shark> s) { s.get()->reset(); return s; });
+    std::for_each(activeFish.begin(), activeFish.end(),
+            [&] (shared_ptr<Fish> f) { f.get()->resetMoved(); });
+    std::for_each(activeSharks.begin(), activeSharks.end(),
+            [&] (shared_ptr<Shark> s) { s.get()->resetMoved(); });
 }
 
 void planet::findNeighborTile(int& y, int& x, bool (tile::*func)() const) {
@@ -234,7 +234,7 @@ void planet::findNeighborTile(int& y, int& x, bool (tile::*func)() const) {
     int randVectorIndex = rand() % (uncheckedNeighbors--);
     
     int neighborCoordY = neighborCoords[randVectorIndex].first;
-    int neighborCoordX = neighborCoords[randVectorIndex].second;
+    int neighborCoordX = neighborCoords[randVectorIndex].second; //could redo most of this using shuffle and then pop_back in the while
     
     while (!(sea[neighborCoordY][neighborCoordX].*func)() && uncheckedNeighbors > 0) { //if function isn't true for this tile, remove it and try another random neighbor
         

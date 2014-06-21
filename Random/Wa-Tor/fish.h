@@ -21,7 +21,7 @@ public:
     void reproduce() { age = 0; }
     
     void move() { moved = true; } //should move moved just be public then?
-    void reset() { moved = false; }
+    void resetMoved() { moved = false; }
     
     bool hasMoved() const { return moved; }
     bool timeToReproduce() const { return age == breedingAge; }

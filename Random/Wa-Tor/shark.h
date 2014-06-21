@@ -24,7 +24,7 @@ public:
     void noFoodFound() { ++timeSinceFood; }
     
     void move() { moved = true; }
-    void reset() { moved = false; }
+    void resetMoved() { moved = false; }
     
     bool hasMoved() const { return moved; }
     bool timeToReproduce() const { return age == breedingAge; }
