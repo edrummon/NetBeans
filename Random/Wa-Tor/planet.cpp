@@ -94,16 +94,6 @@ void planet::placement(mt19937& pRNG) {
     }
 }
 
-shared_ptr<Fish> fishReset(shared_ptr<Fish> f) {
-    f.get()->reset();
-    return f;
-}
-
-shared_ptr<Shark> sharkReset(shared_ptr<Shark> s) {
-    s.get()->reset();
-    return s;
-}
-
 void planet::updatePlanet() { //in order to count fish/sharks later, might have to remove the old creature sea[y][x] pointed to from its vector instead of just setting it to nullptr
     int y = 0, x = 0;
     for (auto &vector : sea) {
@@ -214,8 +204,10 @@ void planet::updatePlanet() { //in order to count fish/sharks later, might have 
         }
         y = (y+planetHeight+1)%planetHeight;
     }
-    std::transform(activeFish.begin(), activeFish.end(), activeFish.begin(), ::fishReset);
-    std::transform(activeSharks.begin(), activeSharks.end(), activeSharks.begin(), ::sharkReset);
+    std::transform(activeFish.begin(), activeFish.end(), activeFish.begin(),
+            [&] (shared_ptr<Fish> f) { f.get()->reset(); return f; });
+    std::transform(activeSharks.begin(), activeSharks.end(), activeSharks.begin(),
+            [&] (shared_ptr<Shark> s) { s.get()->reset(); return s; });
 }
 
 void planet::findNeighborTile(int& y, int& x, bool (tile::*func)() const) {

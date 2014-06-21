@@ -46,8 +46,6 @@ public:
     void placement(std::mt19937&);
     
     void updatePlanet();
-    std::shared_ptr<Fish> fishReset(std::shared_ptr<Fish>);
-    std::shared_ptr<Shark> sharkReset(std::shared_ptr<Shark>);
     void findNeighborTile(int&, int&, bool (tile::*func)() const);
     
     void displaySea() const;
