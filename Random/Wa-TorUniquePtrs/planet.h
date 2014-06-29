@@ -26,24 +26,19 @@ struct tile {
     
     void display() const;
     
-    std::shared_ptr<Fish> pFish;
-    std::shared_ptr<Shark> pShark;
-    //maybe delete active vectors in planet and make these unique_ptrs, by default 
-    //they'll be nullptr but can give them a new raw pointer with pFish.reset(new Fish())
-    //but then counting fish/sharks each tick is a pain in the ass? new private planet ints: numFish/numSharks?
+    std::unique_ptr<Fish> pFish;
+    std::unique_ptr<Shark> pShark;
 };
 
 class planet {
 public:
-    planet() { planetWidth = planetHeight = 0; }
+    planet() { planetWidth = planetHeight = activeFish = activeSharks = 0; }
     planet(int, int, int, int, int, int, int);
     
-    void initPlanet(int, int, int, int);
+    void initPlanet(int, int);
 
     std::mt19937 warmup();
-    void generateFish(std::mt19937&, int, int);
-    void generateSharks(std::mt19937&, int, int);
-    void placement(std::mt19937&);
+    void generateAndPlaceUnits(std::mt19937&, int, int);
     
     void updatePlanet();
     void findNeighborTile(int&, int&, bool (tile::*func)() const);
@@ -51,10 +46,9 @@ public:
     void displaySea() const;
 private:
     int planetWidth, planetHeight;
+    int activeFish, activeSharks;
     
     std::vector<std::vector<tile> > sea;
-    std::vector<std::shared_ptr<Fish> > activeFish;
-    std::vector<std::shared_ptr<Shark> > activeSharks;
 };
 
 #endif	/* PLANET_H */

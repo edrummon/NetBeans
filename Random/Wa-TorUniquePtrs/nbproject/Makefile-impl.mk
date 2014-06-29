@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Wa-Tor
+PROJECTNAME=Wa-TorUniquePtrs
 
 # Active Configuration
 DEFAULTCONF=Debug
