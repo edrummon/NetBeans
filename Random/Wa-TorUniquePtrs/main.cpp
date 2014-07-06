@@ -37,6 +37,7 @@ int main(int argc, char** argv) {
         wait(1);
         cout << endl;
         Wa_Tor.displaySea();
+        Wa_Tor.displayPopulationChange();
         
     }
 

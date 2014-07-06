@@ -1,9 +1,9 @@
 #include "planet.h"
 
-using std::vector;                      using std::shared_ptr;
-using std::uniform_int_distribution;    using std::cout;
-using std::endl;                        using std::mt19937;
-using std::pair;                        using std::make_pair;
+using std::vector;                      using std::cout;
+using std::uniform_int_distribution;    using std::endl;
+using std::mt19937;                     using std::pair;
+using std::make_pair;
 
 void tile::display() const {
     if (isEmpty())
@@ -16,16 +16,15 @@ void tile::display() const {
 
 planet::planet(int width, int height, int numFish, int numSharks,
         int fishBreedingAge, int sharkBreedingAge, int sharkStarvationTimer):
-planetWidth(width), planetHeight(height), activeFish(numFish), activeSharks(numSharks) {
+planetWidth(width), planetHeight(height), aliveFish(numFish),
+        aliveSharks(numSharks), lastAliveFish(0), lastAliveSharks(0) {
     
+    for (int i = 0; i < planetHeight; ++i)
+        sea.push_back( vector<tile>(planetWidth) );
+
     for (int i = 0; i < planetHeight; ++i) {
-        vector<tile> v(planetWidth);
-        sea.push_back(v);
-    }
-    for (int i = 0; i < planetHeight; ++i) {
-        for (int j = 0; j < planetWidth; ++j) {
-            sea[i][j] = tile();
-        }
+        for (int j = 0; j < planetWidth; ++j)
+            sea[i].push_back( tile() );
     }
     
     Fish::setBreedingAge(fishBreedingAge);
@@ -61,19 +60,19 @@ void planet::generateAndPlaceUnits(mt19937& pRNG, int fishBreedingAge, int shark
     int randHeight = randYcoord(pRNG);
     int randWidth = randXcoord(pRNG);
     
-    for (int i = 0; i != activeFish; ++i) {
+    for (int i = 0; i != aliveFish; ++i) {
         while (!sea[randHeight][randWidth].isEmpty()) {
             randHeight = randYcoord(pRNG);
             randWidth = randXcoord(pRNG);
         }
-        sea[randHeight][randWidth].pFish.reset(new Fish(randFishAge(pRNG)));
+        sea[randHeight][randWidth].pFish.reset( new Fish(randFishAge(pRNG)) );
     }
-    for (int i = 0; i != activeSharks; ++i) {
+    for (int i = 0; i != aliveSharks; ++i) {
         while (!sea[randHeight][randWidth].isEmpty()) {
             randHeight = randYcoord(pRNG);
             randWidth = randXcoord(pRNG);
         }
-        sea[randHeight][randWidth].pShark.reset(new Shark(randSharkAge(pRNG)));
+        sea[randHeight][randWidth].pShark.reset( new Shark(randSharkAge(pRNG)) );
     }
 }
 
@@ -105,11 +104,11 @@ void planet::updatePlanet() {
                     
                     sea[newY][newX].pFish.reset( sea[y][x].pFish.release() );
                     
-                    if (tile.pFish.get()->timeToReproduce()) {
+                    if (sea[newY][newX].pFish.get()->timeToReproduce()) {
                         
                         sea[newY][newX].pFish.get()->reproduce();
-                        sea[y][x].pFish.reset(new Fish());
-                        ++activeFish;
+                        sea[y][x].pFish.reset( new Fish() );
+                        ++aliveFish;
                         
                     } else {
                         
@@ -128,7 +127,7 @@ void planet::updatePlanet() {
                 if (tile.pShark.get()->hasStarved()) {
                     
                     sea[y][x].pShark.reset();
-                    --activeSharks;
+                    --aliveSharks;
                     
                 } else {
 
@@ -137,13 +136,13 @@ void planet::updatePlanet() {
                         sea[y][x].pShark.get()->eatFish();
                         sea[newY][newX].pFish.reset();
                         sea[newY][newX].pShark.reset( sea[y][x].pShark.release() );
-                        --activeFish;
+                        --aliveFish;
                         
-                        if (tile.pShark.get()->timeToReproduce()) {
+                        if (sea[newY][newX].pShark.get()->timeToReproduce()) {
 
                             sea[newY][newX].pShark.get()->reproduce();
-                            sea[y][x].pShark.reset(new Shark());
-                            ++activeSharks;
+                            sea[y][x].pShark.reset( new Shark() );
+                            ++aliveSharks;
 
                         } else {
 
@@ -158,7 +157,7 @@ void planet::updatePlanet() {
 
                         if (newY == y && newX == x) { //shark is surrounded (by sharks), if otherwise would reproduce then just set its age to 0
 
-                            if (tile.pShark.get()->timeToReproduce()) {
+                            if (sea[y][x].pShark.get()->timeToReproduce()) {
 
                                 sea[y][x].pShark.get()->reproduce();
 
@@ -188,9 +187,9 @@ void planet::updatePlanet() {
     for (auto &vec : sea) {
         std::for_each(vec.begin(), vec.end(), [&] (tile& t) {
             if (t.hasFish())
-                t.pFish.get()->move();
+                t.pFish.get()->resetMoved();
             else if (t.hasShark())
-                t.pShark.get()->move();
+                t.pShark.get()->resetMoved();
         });
     }
 }
@@ -243,4 +242,17 @@ void planet::displaySea() const {
         }
         cout << endl;
     }
+}
+
+void planet::displayPopulationChange() {
+    int fishPopulationChange = aliveFish - lastAliveFish;
+    int sharkPopulationChange = aliveSharks - lastAliveSharks;
+    
+    cout << "Fish: " << aliveFish << " change: "
+            << ((fishPopulationChange > 0 ) ? "+" : "") << fishPopulationChange << "\t"
+            << "Sharks: " << aliveSharks << " change: "
+            << ((sharkPopulationChange > 0) ? "+" : "") << sharkPopulationChange << endl;
+    
+    lastAliveFish = aliveFish;
+    lastAliveSharks = aliveSharks;
 }

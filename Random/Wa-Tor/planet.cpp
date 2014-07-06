@@ -16,7 +16,7 @@ void tile::display() const {
 
 planet::planet(int width, int height, int numFish, int numSharks,
         int fishBreedingAge, int sharkBreedingAge, int sharkStarvationTimer):
-planetWidth(width), planetHeight(height) {
+planetWidth(width), planetHeight(height), lastAliveFish(0), lastAliveSharks(0) {
     
     for (int i = 0; i < planetHeight; ++i) {
         vector<tile> v(planetWidth);
@@ -59,7 +59,7 @@ void planet::generateFish(mt19937& pRNG, int numFish, int fishBreedingAge) {
     
     for (int i = 0; i < numFish; ++i) {
         shared_ptr<Fish> f(new Fish(randFishAge(pRNG)));
-        activeFish.push_back(f);
+        aliveFish.push_back(f);
     }
 }
 
@@ -68,7 +68,7 @@ void planet::generateSharks(mt19937& pRNG, int numSharks, int sharkBreedingAge) 
     
     for  (int i = 0; i < numSharks; ++i) {
         shared_ptr<Shark> s(new Shark(randSharkAge(pRNG)));
-        activeSharks.push_back(s);
+        aliveSharks.push_back(s);
     }
 }
 
@@ -78,23 +78,23 @@ void planet::placement(mt19937& pRNG) {
     
     int randHeight = randYcoord(pRNG);
     int randWidth = randXcoord(pRNG);
-    for (int i = 0; i < activeFish.size(); ++i) {
+    for (int i = 0; i < aliveFish.size(); ++i) {
         while (!sea[randHeight][randWidth].isEmpty()) {
             randHeight = randYcoord(pRNG);
             randWidth = randXcoord(pRNG);
         }
-        sea[randHeight][randWidth].pFish = activeFish[i];
+        sea[randHeight][randWidth].pFish = aliveFish[i];
     }
-    for (int i = 0; i < activeSharks.size(); ++i) {
+    for (int i = 0; i < aliveSharks.size(); ++i) {
         while (!sea[randHeight][randWidth].isEmpty()) {
             randHeight = randYcoord(pRNG);
             randWidth = randXcoord(pRNG);
         }
-        sea[randHeight][randWidth].pShark = activeSharks[i];
+        sea[randHeight][randWidth].pShark = aliveSharks[i];
     }
 }
 
-void planet::updatePlanet() { //in order to count fish/sharks later, might have to remove the old creature sea[y][x] pointed to from its vector instead of just setting it to nullptr
+void planet::updatePlanet() {
     int y = 0, x = 0;
     for (auto &vector : sea) {
         
@@ -126,8 +126,8 @@ void planet::updatePlanet() { //in order to count fish/sharks later, might have 
                         
                         sea[newY][newX].pFish.get()->reproduce();
                         shared_ptr<Fish> f(new Fish());
-                        activeFish.push_back(f);
-                        sea[y][x].pFish = activeFish[activeFish.size()-1];
+                        aliveFish.push_back(f);
+                        sea[y][x].pFish = aliveFish[aliveFish.size()-1];
                         
                     } else {
                         
@@ -146,22 +146,22 @@ void planet::updatePlanet() { //in order to count fish/sharks later, might have 
                 
                 if (tile.pShark.get()->hasStarved()) {
                     
-                    sea[y][x].pShark = nullptr; //and remove from vector for counting later
+                    sea[y][x].pShark = nullptr;
                     
                 } else {
 
                     if (newY != y || newX != x) { //this shark has found a fish to eat
 
                         sea[y][x].pShark.get()->eatFish();
-                        sea[newY][newX].pFish = nullptr; //remove fish from vector also? or maybe I should be using unique_ptr
+                        sea[newY][newX].pFish = nullptr;
                         sea[newY][newX].pShark = sea[y][x].pShark;
                         
                         if (tile.pShark.get()->timeToReproduce()) {
 
                             sea[newY][newX].pShark.get()->reproduce();
                             shared_ptr<Shark> s(new Shark());
-                            activeSharks.push_back(s);
-                            sea[y][x].pShark = activeSharks[activeSharks.size()-1];
+                            aliveSharks.push_back(s);
+                            sea[y][x].pShark = aliveSharks[aliveSharks.size()-1];
 
                         } else {
 
@@ -204,9 +204,9 @@ void planet::updatePlanet() { //in order to count fish/sharks later, might have 
         }
         y = (y+planetHeight+1)%planetHeight;
     }
-    std::for_each(activeFish.begin(), activeFish.end(),
+    std::for_each(aliveFish.begin(), aliveFish.end(),
             [&] (shared_ptr<Fish> f) { f.get()->resetMoved(); });
-    std::for_each(activeSharks.begin(), activeSharks.end(),
+    std::for_each(aliveSharks.begin(), aliveSharks.end(),
             [&] (shared_ptr<Shark> s) { s.get()->resetMoved(); });
 }
 
@@ -257,5 +257,30 @@ void planet::displaySea() const {
             sea[i][j].display();
         }
         cout << endl;
+    }
+}
+
+void planet::displayPopulationChange() {
+    cleanAliveVectors();
+    cout << "Fish: " << aliveFish.size() << " change: " << int (aliveFish.size()) - lastAliveFish
+            << "\t" << "Sharks: " << aliveSharks.size() << " change: "
+            << int (aliveSharks.size()) - lastAliveSharks << endl;
+    
+    lastAliveFish = aliveFish.size();
+    lastAliveSharks = aliveSharks.size();
+}
+
+void planet::cleanAliveVectors() {
+    for (auto fishIter = aliveFish.begin(); fishIter != aliveFish.end(); ++fishIter) {
+        if (fishIter->use_count() == 1) {
+            aliveFish.erase(fishIter);
+            --fishIter;
+        }
+    }
+    for (auto sharkIter = aliveSharks.begin(); sharkIter != aliveSharks.end(); ++sharkIter) {
+        if (sharkIter->use_count() == 1) {
+            aliveSharks.erase(sharkIter);
+            --sharkIter;
+        }
     }
 }

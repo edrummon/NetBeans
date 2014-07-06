@@ -12,7 +12,6 @@
 #include <iostream>
 #include <memory>
 #include <random>
-#include <utility>
 #include <vector>
 #include "fish.h"
 #include "shark.h"
@@ -32,7 +31,8 @@ struct tile {
 
 class planet {
 public:
-    planet() { planetWidth = planetHeight = activeFish = activeSharks = 0; }
+    planet() { planetWidth = planetHeight = aliveFish =
+            aliveSharks = lastAliveFish = lastAliveSharks = 0; }
     planet(int, int, int, int, int, int, int);
     
     void initPlanet(int, int);
@@ -44,9 +44,12 @@ public:
     void findNeighborTile(int&, int&, bool (tile::*func)() const);
     
     void displaySea() const;
+    void displayPopulationChange();
 private:
     int planetWidth, planetHeight;
-    int activeFish, activeSharks;
+    
+    int aliveFish, aliveSharks;
+    int lastAliveFish, lastAliveSharks;
     
     std::vector<std::vector<tile> > sea;
 };
